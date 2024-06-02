@@ -1,0 +1,27 @@
+.container {
+    width: 80%;
+    height: 80vh;
+    background-color: lawngreen;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    padding: 11px;
+}
+
+input {
+    display: block;
+    padding: 11px;
+    width: 400px;
+    margin: 11px;
+    border-radius: 11px;
+}
+
+button{
+    display: block;
+    padding: 11px 22px;
+    width: 111px;
+    margin: 22px auto;
+}
+img{
+    width: 100px;
+}

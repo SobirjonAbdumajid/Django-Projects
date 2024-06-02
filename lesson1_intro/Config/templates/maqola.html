@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>Maqola</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        {% if request.user.is_authenticated %}
+        {% include 'login_navbar.html' %}
+        {% for maqola in maqolalar %}
+        <div class="maqola">
+            <a href="{% url 'article_detail' maqola.id %}">Title: {{ maqola.title }}</a>
+            <img src="{{ maqola.imageURL }}">
+            <p>Joylangan vaqt: {{ maqola.created_at }}</p>
+        </div>
+        {% endfor %}
+        {% else %}
+        {% include 'navbar.html' %}
+        {% for m_new in maqolalar %}
+        <div class="maqola">
+            <a href="{% url 'article_detail' m_new.id %}">Title: {{ m_new.title }}</a>
+            <img src="{{ m_new.imageURL }}">
+            <h4>Author: {{ m_new.author }}</h4>
+            <p>Joylangan vaqt: {{ m_new.created_at }}</p>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</body>
+
+</html>

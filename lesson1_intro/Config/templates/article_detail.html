@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>Maqola</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="maqola">
+            <a href="{% url 'maqola' %}">Orqaga</a>
+            <h2>Title: {{ maqola.title }}</h2>
+            <img src="{{ maqola.imageURL }}">
+            <p>Description: {{ maqola.description }}</p>
+            <h4>Author: {{ maqola.author }}</h4>
+            <p>Joylangan vaqt: {{ maqola.created_at }}</p>
+        </div>
+    </div>
+</body>
+
+</html>

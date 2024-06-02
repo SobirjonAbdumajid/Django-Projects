@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Maqola</title>
+    <link rel="stylesheet" href="{% static 'css/auth/style.css' %}">
+</head>
+<body>
+    <div class="container">
+
+        <form method="post"> {# get va post request jo'atadi #} {# post\get post secretroq va hamma narsa bodyning ichida ketadi. getda hamma ma'lumot urlda ketadi#}
+            <h1>Login page</h1>
+            {% csrf_token %}
+            <input name="email" type="email" placeholder="Input your email">
+            <input name="password" type="password" placeholder="Input your email">
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>

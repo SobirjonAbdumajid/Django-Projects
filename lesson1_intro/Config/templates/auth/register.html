@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>Maqola</title>
+    <link rel="stylesheet" href="{% static 'css/auth/style.css' %}">
+
+</head>
+
+<body>
+    <div class="container">
+        <form method="post"> {# get va post request jo'atadi #}
+            <h1>Register page</h1>
+            {% csrf_token %}
+            <label for="email">Email</label>
+            <input name="email" type="email" placeholder="Input your email">
+            <label for="first_name">Name</label>
+            <input name="first_name" type="text" placeholder="Input your name">
+            <label for="second_name">Surename</label>
+            <input name="second_name" type="text" placeholder="Input your surename">
+            <label for="password1">Password</label>
+            <input name="password1" type="password" placeholder="Input your password">
+            <label for="password2">Conf password</label>
+            <input name="password2" type="password" placeholder="Input your password again">
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+
+</html>

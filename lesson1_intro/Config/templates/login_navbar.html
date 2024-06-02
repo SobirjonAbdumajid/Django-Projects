@@ -1,0 +1,11 @@
+<div class="navbar">
+    <a style="font-size: 33px" href="{% url 'maqola' %}">Logo</a>
+    <a href="https://t.me/Sobirjon_Abdumajidov">Contact Us</a>
+    <a href="https://www.epam.com/about" target="_blank">About Us</a>
+    <a href="{% url 'maqola' %}">All staff</a>
+    <a href="{% url 'world' %}">Staff</a>
+    <a href="{% url 'local' %}">Guests</a>
+    <a href="{% url 'sport' %}">Managers</a>
+    <a href="">{{ request.user }}</a>
+    <a href="{% url 'logout' %}">Log out</a>
+</div>

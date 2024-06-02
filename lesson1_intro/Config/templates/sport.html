@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>Maqola</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        {% if request.user.is_authenticated %}
+        {% include 'login_navbar.html' %}
+
+        {% for s_new in s_news %}
+        <div class="maqola">
+            <a href="{% url 'article_detail' s_new.id %}">Title: {{ s_new.title }}</a>
+            <img src="{{ s_new.imageURL }}">
+            <h4>Author: {{ s_new.author }}</h4>
+            <p>Joylangan vaqt: {{ s_new.created_at }}</p>
+        </div>
+        {% endfor %}
+        {% else %}
+        {% include 'navbar.html' %}
+        {% for s_new in s_news %}
+        <div class="maqola">
+            <a href="{% url 'article_detail' s_new.id %}">Title: {{ s_new.title }}</a>
+            <img src="{{ s_new.imageURL }}">
+            <h4>Author: {{ s_new.author }}</h4>
+            <p>Joylangan vaqt: {{ s_new.created_at }}</p>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</body>
+
+</html>
