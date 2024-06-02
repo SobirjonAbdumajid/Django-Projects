@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'account',
     'appCRUD',
     'rest_framework',
-    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -142,7 +141,3 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'account.CustomUser'
-
-SWAGGER_SETTINGS = {
-    'VALIDATOR_URL': 'http://localhost:8000',
-}

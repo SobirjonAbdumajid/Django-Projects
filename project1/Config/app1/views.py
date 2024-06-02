@@ -127,13 +127,10 @@
 #         context=context,
 #     )
 from django.shortcuts import render
-from rest_framework import viewsets
-
 from .models import Maqola
 from .serializer import StuffSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework import viewsets, permissions
 
 @api_view(["POST"])
 def add_customer(request):
@@ -217,8 +214,3 @@ def article_detail(request, id):
     maqola = Maqola.objects.get(id=id)
     context = {'maqola': maqola}
     return render(request, 'article_detail.html', context)
-
-class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Maqola.objects.all()
-    permission_classes = [permissions.AllowAny]
-    serializer_class = StuffSerializer
