@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
-
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from todo.models import Todo
 from todo.serializers import TodoSerializer
 
 
@@ -8,3 +10,6 @@ from todo.serializers import TodoSerializer
 
 class TodoViewSet(ModelViewSet):
     serializer_class = TodoSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    queryset = Todo.objects.all()
