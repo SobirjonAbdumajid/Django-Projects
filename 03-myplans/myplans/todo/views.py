@@ -13,3 +13,7 @@ class TodoViewSet(ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
     queryset = Todo.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.validated_data['user'] = self.request.user
+        serializer.save()
