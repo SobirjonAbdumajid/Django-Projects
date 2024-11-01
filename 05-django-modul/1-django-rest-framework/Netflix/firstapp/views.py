@@ -4,11 +4,14 @@ from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Movie, Actor
-from .serializers import MovieSerializer, ActorSerializer
+from .models import Movie, Actor, Comment
+from .serializers import MovieSerializer, ActorSerializer, CommentSerializer, CommentListSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.pagination import LimitOffsetPagination
 from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import ListAPIView
+from rest_framework import generics
 
 # Create your views here.
 
@@ -112,3 +115,42 @@ class MovieActorAPIView(APIView):
         actors = movie.actors.all()
         serializer = ActorSerializer(actors, many=True)
         return Response(serializer.data)
+
+
+class AddCommentView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CommentListView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CommentListSerializer
+
+    def get_queryset(self, request):
+        movie_id = self.request.query_params.get('movie_id')
+        if movie_id:
+            return Comment.objects.filter(movie_id=movie_id)
+        return Comment.objects.none()
+
+
+class DeleteCommentView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Comment.objects.all()
+    lookup_field = 'id'
+
+    def delete(self, request, *args, **kwargs):
+        comment = self.get_object()
+        # Ensure only the owner can delete their comment
+        if comment.user != request.user:
+            return Response(
+                {"detail": "You do not have permission to delete this comment."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        return super().delete(request, *args, **kwargs)
+
