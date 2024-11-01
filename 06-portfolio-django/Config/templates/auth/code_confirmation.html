@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code confirmation</title>
+{#    <link rel="stylesheet" href="{% static 'css/auth/style.css' %}">#}
+    <link rel="stylesheet" href="{% static 'css/auth/style.css' %}?v={{ STATIC_VERSION }}">
+</head>
+<body>
+    <div class="container">
+        <div class="back-button">
+            <a href="{% url 'home' %}">&larr;</a>
+        </div>
+        <div class="welcome-text">
+            <h1>Welcome Back</h1>
+            <p>Confirmation page</p>
+        </div>
+        <form class="sign-in-form" method="post">
+            {% csrf_token %}
+           <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="youremail@example.com" required>
+            <label for="text">Code</label>
+            <div class="password-container">
+                <input type="text" id="text" name="code" placeholder="Verify ..." required>
+            </div>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+</body>
+</html>

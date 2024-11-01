@@ -1,0 +1,58 @@
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#{% load static %}#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Maqola.uz</title>#}
+{#    <link rel="stylesheet" href="{% static 'css/style.css' %}">#}
+{#</head>#}
+{#<body>#}
+{#{% if request.user.is_authenticated %}#}
+{#    {% include 'login_header.html' %}#}
+{#    {% else %}#}
+{#    {% include 'header.html' %}#}
+{#{% endif %}#}
+{##}
+{#    <div class="container">#}
+{#        <div class="maqola">#}
+{#            <a href="{% url 'home' %}">&larr;</a>#}
+{#            <a href="{% url 'home' %}">Back</a>#}
+{#            <img src="{{ maqolalar.imageURL }}">#}
+{#            <h2>{{ maqolalar.title }}</h2>#}
+{#            <p>{{ maqolalar.description }}</p>#}
+{#            <h4>{{ maqolalar.author }}</h4>#}
+{#            <hr>#}
+{#        </div>#}
+{#    </div>#}
+{#</body>#}
+{#</html>#}
+
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Maqola.uz</title>
+{#    <link rel="stylesheet" href="{% static 'css/style.css' %}">#}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v={{ STATIC_VERSION }}">
+</head>
+<body>
+    {% if request.user.is_authenticated %}
+        {% include 'login_header.html' %}
+    {% else %}
+        {% include 'header.html' %}
+    {% endif %}
+
+    <div class="container" id="article_details">
+        <div class="maqola" id="maqola_id">
+            <img class="image_main" src="{{ maqolalar.imageURL }}">
+            <a href="{% url 'home' %}" class="back-link">&larr; Back</a>
+            <h2>{{ maqolalar.title }}</h2>
+            <p>{{ maqolalar.description_uzb }}</p>
+            <p>{{ maqolalar.description_eng }}</p>
+            <a target="_blank" href="{{ maqolalar.link }}"><h4>{{ maqolalar.source }}</h4></a>
+            <hr>
+        </div>
+    </div>
+</body>
+</html>

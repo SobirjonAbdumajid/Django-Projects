@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Certificates</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    {% if request.user.is_authenticated %}
+        {% include 'login_header.html' %}
+    {% else %}
+        {% include 'header.html' %}
+    {% endif %}
+
+    <div class="hero">
+        <div class="hero-content">
+            <img src="{% static 'IMG_.jpg' %}" alt="Profile Picture" class="profile-pic">
+            <h1>Sobirjon Abdumajidov</h1>
+            <p>Full Stack Developer</p>
+            <div class="addition-info">
+                <a class="icon-svg" target="_blank" href="https://t.me/Djangoconfig"><img class="icon-svg" src="{% static 'telegram.svg' %}"></a>
+                <a class="icon-svg" target="_blank" href="https://www.linkedin.com/in/sobirjon-abdumajidov-632659270/"><img class="icon-svg" src="{% static 'linkedin.svg' %}"></a>
+                <a class="icon-svg" target="_blank" href="https://www.instagram.com/sobirjon_a05/"><img class="icon-svg" src="{% static 'instagram.svg' %}"></a>
+                <a class="icon-svg" target="_blank" href="https://github.com/Sobirjon005"><img class="icon-svg" src="{% static 'github.svg' %}"></a>
+            </div>
+        </div>
+    </div>
+    <h1 class="category">Certificates</h1>
+    <div class="container" id="certificates">
+        {% for certificate in vanues %}
+            <div class="maqola" id="for_certificates">
+                <img class="image_main" src="{{ certificate.imageURL }}">
+                <a href="{% url 'article_details' certificate.id %}"><h2>{{ certificate.title }}</h2></a>
+{#                <h4>{{ certificate.author }}</h4>#}
+            </div>
+        {% endfor %}
+    </div>
+    <br>
+    <br>
+
+    {% if vanues.has_previous %}
+        <a class="pagination" href="?page=1">&laquo;</a>
+        <a class="pagination" href="?page={{ vanues.previous_page_number }}">
+        Previous</a>
+    {% endif %}
+
+    Page {{ vanues.number }} of {{ vanues.paginator.num_pages }}
+
+    {% if vanues.has_next %}
+        <a class="pagination" href="?page={{ vanues.next_page_number }}">next</a>
+        <a class="pagination" href="?page={{ vanues.paginator.num_pages }}">&raquo;</a>
+    {% endif %}
+
+{% include 'footer.html' %}
+</body>
+</html>
