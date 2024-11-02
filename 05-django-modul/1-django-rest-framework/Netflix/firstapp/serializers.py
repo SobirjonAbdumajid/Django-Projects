@@ -2,10 +2,12 @@ from .models import Movie, Actor, Comment
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ('movie', 'text')  # 'user' will be set automatically in the view
+        fields = '__all__'  # 'user' will be set automatically in the view
+
 
 class CommentListSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField()  # To display the username
@@ -20,7 +22,6 @@ class ActorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Actor
         fields = ('name', 'birthdate', 'gender')
-
 
     def validate_birthdate(self, value):
         year = value.year
