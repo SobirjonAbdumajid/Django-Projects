@@ -77,6 +77,14 @@ class MovieActorAPIView(APIView):
         return Response(serializer.data)
 
 
+
+
+
+
+# --------------------------
+
+
+
 class AddCommentView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -89,10 +97,10 @@ class AddCommentView(APIView):
 
 
 class CommentListView(ListAPIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     serializer_class = CommentListSerializer
 
-    def get_queryset(self, request):
+    def get_queryset(self):
         movie_id = self.request.query_params.get('movie_id')
         if movie_id:
             return Comment.objects.filter(movie_id=movie_id)
@@ -122,7 +130,27 @@ class CommentViewSet(ModelViewSet):
     serializer_class = CommentSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
-    queryset = Comment.objects.all()
+
+    def get_queryset(self):
+        return Comment.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.validated_data['user'] = self.request.user
+        serializer.save()
+
+
+# class TodoViewSet(ModelViewSet):
+#     serializer_class = TodoSerializer
+#     authentication_classes = (TokenAuthentication,)
+#     permission_classes = (IsAuthenticated,)
+#
+#     def get_queryset(self):
+#         return Todo.objects.filter(user=self.request.user)
+#
+#     def perform_create(self, serializer):
+#         serializer.validated_data['user'] = self.request.user
+#         serializer.save()
+
 
 # Create your views here.
 
