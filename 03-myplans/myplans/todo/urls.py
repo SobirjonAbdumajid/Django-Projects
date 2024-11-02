@@ -5,7 +5,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 
 
 router = DefaultRouter()
-router.register('todo', TodoViewSet)
+router.register('todo', TodoViewSet, 'todo')
 
 urlpatterns = [
     path('', include(router.urls)),
