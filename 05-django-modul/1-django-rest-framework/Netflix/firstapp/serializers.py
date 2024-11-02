@@ -19,6 +19,7 @@ class CommentListSerializer(serializers.ModelSerializer):
 
 
 class ActorSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Actor
         fields = ('name', 'birthdate', 'gender')
@@ -35,7 +36,7 @@ class ActorSerializer(serializers.ModelSerializer):
 
 
 class MovieSerializer(serializers.ModelSerializer):
-    # actors = ActorSerializer(many=True)
+    actors = ActorSerializer(many=True)
     class Meta:
         model = Movie
         fields = ('id', 'name', 'year', 'imdb', 'genre', 'actors', 'watched')

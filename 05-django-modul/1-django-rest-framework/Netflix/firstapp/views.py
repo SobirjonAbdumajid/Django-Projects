@@ -1,5 +1,5 @@
 from django.db import transaction
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -17,6 +17,10 @@ from rest_framework.authentication import TokenAuthentication
 class MovieViewSet(ModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
+    pagination_class = LimitOffsetPagination
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    ordering_fields = ['watched', '-watched', 'imdb', '-imdb']
+    search_fields = ['^name', 'actors__name'] # if: ['=name', 'actors__name'] = exact matches. ^ starts-with search
 
     @action(detail=True, methods=['GET'])
     def actors(self, request, *args, **kwargs):
