@@ -12,15 +12,39 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import ListAPIView
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
+from django.contrib.postgres.search import TrigramSimilarity
 
 
 class MovieViewSet(ModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
     pagination_class = LimitOffsetPagination
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    ordering_fields = ['watched', '-watched', 'imdb', '-imdb']
-    search_fields = ['^name', 'actors__name'] # if: ['=name', 'actors__name'] = exact matches. ^ starts-with search
+    filter_backends = [filters.OrderingFilter]
+    # filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    ordering_fields = ['watched', '-watched']
+    search_fields = ['name', 'actors__name'] # if: ['=name', 'actors__name'] = exact matches. ^ starts-with search
+    # search_fields = ['^name', 'actors__name'] # if: ['=name', 'actors__name'] = exact matches. ^ starts-with search
+
+    def get_queryset(self):
+        queryset = Movie.objects.all()
+        query = self.request.query_params.get('search')
+        if query is not None:
+            queryset = Movie.objects.annotate(
+                similarity=TrigramSimilarity('name', query),
+            ).filter(similarity__gt=0.1).order_by('-similarity')
+        return queryset
+
+    # def get_queryset(self):
+    #     queryset = Movie.objects.all()
+    #     query = self.request.query_params.get('search')
+    #     if query:
+    #         queryset = Movie.objects.annotate(
+    #             name_similarity=TrigramSimilarity('name', query),
+    #             actor_similarity=TrigramSimilarity('actors__name', query)
+    #         ).filter(
+    #             Q(name_similarity__gt=0.3) | Q(actor_similarity__gt=0.3)
+    #         ).order_by(F('name_similarity') + F('actor_similarity')).distinct()
+    #     return queryset
 
     @action(detail=True, methods=['GET'])
     def actors(self, request, *args, **kwargs):
