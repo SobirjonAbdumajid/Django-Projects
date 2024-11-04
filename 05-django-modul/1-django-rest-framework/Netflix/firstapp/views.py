@@ -13,8 +13,26 @@ from rest_framework.generics import ListAPIView
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
 from django.contrib.postgres.search import TrigramSimilarity
+# from django_filters.rest_framework import DjangoFilterBackend
 
 
+# class MovieViewSet(ModelViewSet):
+#     queryset = Movie.objects.all()
+#     serializer_class = MovieSerializer
+#     pagination_class = LimitOffsetPagination
+#     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+#     filterset_fields = ['genre']  # Enable filtering by genre
+#     ordering_fields = ['watched', '-watched']
+#     search_fields = ['name', 'actors__name']
+#
+#     def get_queryset(self):
+#         queryset = Movie.objects.all()
+#         query = self.request.query_params.get('search')
+#         if query is not None:
+#             queryset = Movie.objects.annotate(
+#                 similarity=TrigramSimilarity('name', query),
+#             ).filter(similarity__gt=0.1).order_by('-similarity')
+#         return queryset
 class MovieViewSet(ModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
