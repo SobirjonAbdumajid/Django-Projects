@@ -4,6 +4,7 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 from firstapp.serializers import MovieSerializer, CommentSerializer, ActorSerializer
 
+
 class TestMovieSerializer(TestCase):
     def setUp(self):
         self.movie = Movie.objects.create(
@@ -44,48 +45,63 @@ class MovieViewSetTest(TestCase):
 
 
 
-def test_movie_search(self):
-    actor = Actor.objects.create(name="John Doe", birthdate="1980-01-01", gender="M")
-    movie = Movie.objects.create(name="Movie with Actor", year=2010, genre="Comedy", imdb=8.0)
-    movie.actors.add(actor)
+    # def test_movie_search(self):
+    #     actor = Actor.objects.create(name="John Doe", birthdate="1980-01-01", gender="M")
+    #     movie = Movie.objects.create(name="Movie with Actor", year=2010, genre="Comedy", imdb=8.0)
+    #     movie.actors.add(actor)
+    #
+    #     # Search by movie name
+    #     url = f"{reverse('movie-list')}?search=Movie with Actor"
+    #     response = self.client.get(url)
+    #
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(len(response.data), 1)
+    #     self.assertEqual(response.data[0]['name'], "Movie with Actor")
+    #
+    #     # Search by actor name
+    #     url = f"{reverse('movie-list')}?search=John Doe"
+    #     response = self.client.get(url)
+    #
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(len(response.data), 1)
+    #     self.assertEqual(response.data[0]['name'], "Movie with Actor")
 
-    # Search by movie name
-    url = f"{reverse('movie-list')}?search=Movie with Actor"
-    response = self.client.get(url)
+    # def test_movie_order_by_imdb(self):
+    #     Movie.objects.create(name="High IMDb Movie", year=2000, genre="Sci-Fi", imdb=9.0)
+    #     Movie.objects.create(name="Low IMDb Movie", year=2005, genre="Horror", imdb=5.0)
+    #
+    #     # Sort by IMDb in descending order
+    #     url = f"{reverse('movie-list')}?ordering=-imdb"
+    #     response = self.client.get(url)
+    #
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(response.data[0]['name'], "High IMDb Movie")
+    #     self.assertEqual(response.data[1]['name'], "Low IMDb Movie")
 
-    self.assertEqual(response.status_code, 200)
-    self.assertEqual(len(response.data), 1)
-    self.assertEqual(response.data[0]['name'], "Movie with Actor")
+class TextActorSerializer(TestCase):
+    def setUp(self):
+        pass
 
-    # Search by actor name
-    url = f"{reverse('movie-list')}?search=John Doe"
-    response = self.client.get(url)
+    def test_is_valid(self):
+        data = {
+            'name': 'Sobirjon',
+            'birthdate': '2005-03-05',
+            'gender': 'Male'
+        }
+        serializer = ActorSerializer(data=data)
 
-    self.assertEqual(response.status_code, 200)
-    self.assertEqual(len(response.data), 1)
-    self.assertEqual(response.data[0]['name'], "Movie with Actor")
+        self.assertTrue(serializer.is_valid())
 
-    def test_movie_order_by_imdb(self):
-        Movie.objects.create(name="High IMDb Movie", year=2000, genre="Sci-Fi", imdb=9.0)
-        Movie.objects.create(name="Low IMDb Movie", year=2005, genre="Horror", imdb=5.0)
+    def test_is_not_valid(self):
+        data = {
+            'name': 'Sobirjon',
+            'birthdate': '1990-01-01',
+            'gender': 'Male'
+        }
+        serializer = ActorSerializer(data=data)
 
-        # Sort by IMDb in descending order
-        url = f"{reverse('movie-list')}?ordering=-imdb"
-        response = self.client.get(url)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data[0]['name'], "High IMDb Movie")
-        self.assertEqual(response.data[1]['name'], "Low IMDb Movie")
-
-# class TextActorSerializer(TestCase):
-#     def setUp(self):
-#         pass
-#
-#     def test_data(self):
-#         data = {
-#             'name': ''
-#         }
-
+        self.assertFalse(serializer.is_valid())
+        print(serializer.errors)
 
 # name = models.CharField(max_length=255)
 # birthdate = models.DateField()

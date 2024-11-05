@@ -13,6 +13,8 @@ from rest_framework.generics import ListAPIView
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
 from django.contrib.postgres.search import TrigramSimilarity
+from rest_framework.viewsets import ReadOnlyModelViewSet
+
 # from django_filters.rest_framework import DjangoFilterBackend
 
 
@@ -33,7 +35,7 @@ from django.contrib.postgres.search import TrigramSimilarity
 #                 similarity=TrigramSimilarity('name', query),
 #             ).filter(similarity__gt=0.1).order_by('-similarity')
 #         return queryset
-class MovieViewSet(ModelViewSet):
+class MovieViewSet(ReadOnlyModelViewSet): # ModelViewSet
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
     pagination_class = LimitOffsetPagination
@@ -105,7 +107,7 @@ class MovieViewSet(ModelViewSet):
         return Response({'status': 'actor removed'}, status=status.HTTP_200_OK)
 
 
-class ActorViewSet(ModelViewSet):
+class ActorViewSet(ReadOnlyModelViewSet):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
     pagination_class = LimitOffsetPagination
@@ -169,10 +171,7 @@ class DeleteCommentView(generics.DestroyAPIView):
         return super().delete(request, *args, **kwargs)
 
 
-
-
-
-class CommentViewSet(ModelViewSet):
+class CommentViewSet(ReadOnlyModelViewSet):
     serializer_class = CommentSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
