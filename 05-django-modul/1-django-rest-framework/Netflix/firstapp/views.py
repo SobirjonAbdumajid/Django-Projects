@@ -1,44 +1,27 @@
 from django.db import transaction
-from rest_framework import status, viewsets, filters
+from rest_framework import status, viewsets, filters, generics
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Movie, Actor, Comment
 from .serializers import MovieSerializer, ActorSerializer, CommentSerializer, CommentListSerializer
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from rest_framework.pagination import LimitOffsetPagination
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import ListAPIView
-from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
 from django.contrib.postgres.search import TrigramSimilarity
 # from django_filters.rest_framework import DjangoFilterBackend
 
 
-# class MovieViewSet(ModelViewSet):
-#     queryset = Movie.objects.all()
-#     serializer_class = MovieSerializer
-#     pagination_class = LimitOffsetPagination
-#     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
-#     filterset_fields = ['genre']  # Enable filtering by genre
-#     ordering_fields = ['watched', '-watched']
-#     search_fields = ['name', 'actors__name']
-#
-#     def get_queryset(self):
-#         queryset = Movie.objects.all()
-#         query = self.request.query_params.get('search')
-#         if query is not None:
-#             queryset = Movie.objects.annotate(
-#                 similarity=TrigramSimilarity('name', query),
-#             ).filter(similarity__gt=0.1).order_by('-similarity')
-#         return queryset
-class MovieViewSet(ModelViewSet):
+class MovieViewSet(ReadOnlyModelViewSet): # ModelViewSet
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
     pagination_class = LimitOffsetPagination
     filter_backends = [filters.OrderingFilter]
     # filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['genre']  # Enable filtering by genre
     ordering_fields = ['watched', '-watched']
     search_fields = ['name', 'actors__name'] # if: ['=name', 'actors__name'] = exact matches. ^ starts-with search
     # search_fields = ['^name', 'actors__name'] # if: ['=name', 'actors__name'] = exact matches. ^ starts-with search
@@ -51,18 +34,6 @@ class MovieViewSet(ModelViewSet):
                 similarity=TrigramSimilarity('name', query),
             ).filter(similarity__gt=0.1).order_by('-similarity')
         return queryset
-
-    # def get_queryset(self):
-    #     queryset = Movie.objects.all()
-    #     query = self.request.query_params.get('search')
-    #     if query:
-    #         queryset = Movie.objects.annotate(
-    #             name_similarity=TrigramSimilarity('name', query),
-    #             actor_similarity=TrigramSimilarity('actors__name', query)
-    #         ).filter(
-    #             Q(name_similarity__gt=0.3) | Q(actor_similarity__gt=0.3)
-    #         ).order_by(F('name_similarity') + F('actor_similarity')).distinct()
-    #     return queryset
 
     @action(detail=True, methods=['GET'])
     def actors(self, request, *args, **kwargs):
@@ -105,7 +76,7 @@ class MovieViewSet(ModelViewSet):
         return Response({'status': 'actor removed'}, status=status.HTTP_200_OK)
 
 
-class ActorViewSet(ModelViewSet):
+class ActorViewSet(ReadOnlyModelViewSet):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
     pagination_class = LimitOffsetPagination
@@ -121,14 +92,6 @@ class MovieActorAPIView(APIView):
         actors = movie.actors.all()
         serializer = ActorSerializer(actors, many=True)
         return Response(serializer.data)
-
-
-
-
-
-
-# --------------------------
-
 
 
 class AddCommentView(APIView):
@@ -169,10 +132,7 @@ class DeleteCommentView(generics.DestroyAPIView):
         return super().delete(request, *args, **kwargs)
 
 
-
-
-
-class CommentViewSet(ModelViewSet):
+class CommentViewSet(ReadOnlyModelViewSet):
     serializer_class = CommentSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -183,58 +143,3 @@ class CommentViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.validated_data['user'] = self.request.user
         serializer.save()
-
-
-# class TodoViewSet(ModelViewSet):
-#     serializer_class = TodoSerializer
-#     authentication_classes = (TokenAuthentication,)
-#     permission_classes = (IsAuthenticated,)
-#
-#     def get_queryset(self):
-#         return Todo.objects.filter(user=self.request.user)
-#
-#     def perform_create(self, serializer):
-#         serializer.validated_data['user'] = self.request.user
-#         serializer.save()
-
-
-# Create your views here.
-
-# class HelloWorldAPIView(APIView):
-#     def get(self, request):
-#         return Response(data={'message': 'Hello World!'})
-#
-#     def post(self, request):
-#         # Use single quotes inside the f-string to avoid conflict with outer double quotes
-#         message = f"Hello {request.data['name']}"
-#         return Response(data={'greeting': message})
-
-# class MovieAPIView(APIView):
-#     def get(self, request):
-#         movies = Movie.objects.all()
-#         serializer = MovieSerializer(movies, many=True)
-#
-#         return Response(data={'movies': serializer.data})
-#
-#     def post(self, request):
-#         serializer = MovieSerializer(data=request.data)
-#
-#         serializer.is_valid(raise_exception=True)
-#         serializer.save()
-#
-#         return Response(data=serializer.data)
-#
-# class ActorAPIView(APIView):
-#     def get(self, request):
-#         actors = Actor.objects.all()
-#         serializer = ActorSerializer(actors, many=True)
-#
-#         return Response(data={'actors': serializer.data})
-#
-#     def post(self, request):
-#         serializer = ActorSerializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#
-#         serializer.save()
-#         return Response(data=serializer.data)
-

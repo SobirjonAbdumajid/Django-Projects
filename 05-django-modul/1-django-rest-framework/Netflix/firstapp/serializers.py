@@ -22,7 +22,8 @@ class ActorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Actor
-        fields = ('name', 'birthdate', 'gender')
+        # fields = ('name', 'birthdate', 'gender')
+        fields = ('id', 'name', 'birthdate', 'gender')
 
     def validate_birthdate(self, value):
         year = value.year
@@ -37,6 +38,7 @@ class ActorSerializer(serializers.ModelSerializer):
 
 class MovieSerializer(serializers.ModelSerializer):
     actors = ActorSerializer(many=True)
+
     class Meta:
         model = Movie
         fields = ('id', 'name', 'year', 'imdb', 'genre', 'actors', 'watched')
