@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        # migrations.RunSQL('CREATE EXTENSIONS pg_trgm'),
         migrations.CreateModel(
             name='Actor',
             fields=[

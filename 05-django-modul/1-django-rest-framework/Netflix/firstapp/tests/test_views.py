@@ -14,7 +14,7 @@
 
 
 from django.test import TestCase, Client
-from firstapp.models import Actor
+from firstapp.models import Actor, Comment
 
 
 class TestActorViewSet(TestCase):
@@ -38,3 +38,10 @@ class TestActorViewSet(TestCase):
         self.assertEqual(data[0]["birthdate"], "1980-01-01")
         self.assertEqual(data[0]["gender"], "M")
 
+
+
+
+    # movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    # user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
+    # text = models.TextField()
+    # created_date = models.DateTimeField()
