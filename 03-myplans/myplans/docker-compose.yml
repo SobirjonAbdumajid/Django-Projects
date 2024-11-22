@@ -1,23 +1,20 @@
 services:
   app:
-    build: 
-      context: .
-      dockerfile: Dockerfile
+
+    build: .
     depends_on:
       - db
-    environment:
-      - POSTGRES_HOST=db
-      - POSTGRES_DB=postgres
+
     ports:
-      - "8000:8000"
+      - 8000:8000
 
   db:
-    image: postgres:9.6
+    image: postgres:latest
     environment:
-      - POSTGRES_DB=myplan_db
+      - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=onamotam
+      - POSTGRES_PASSWORD=postgres
     ports:
-      - "5432:5432"
+      - 5432:5431
     volumes:
       - ./data/db:/var/lib/postgresql/data
